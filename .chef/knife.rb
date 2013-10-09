@@ -19,3 +19,9 @@ cookbook_copyright "YouAPPI Ltd."
 
 knife[:aws_access_key_id] = ENV.fetch('AWS_ACCESS_KEY_ID', '')
 knife[:aws_secret_access_key] = ENV.fetch('AWS_SECRET_ACCESS_KEY', '')
+
+knife[:region] = "us-east-1"
+knife[:availability_zone] = "us-east-1a"
+knife[:flavor] = "m1.small"
+knife[:image] = "ami-dfebbab6"
+
