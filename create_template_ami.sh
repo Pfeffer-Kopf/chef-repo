@@ -11,7 +11,7 @@ NOW=$(date +"%d-%m-%Y_%H-%M")
 VERSION=$(bundle exec knife cookbook  list | grep youappi | awk '{print $2}')
 BASE_AMI=ami-dfebbab6
 echo "##teamcity[progressMessage 'Creating new intance from youappi-base cookbook version $VERSION']"
-bundle exec knife ec2 server create -G PH2-SG-Tomix -I $BASE_AMI -F m1.small -x ubuntu -S youappi-PH2  -N template-tomix-$NOW -r "role[tomix]" | tee deploy.log 
+bundle exec knife ec2 server create -G PH2-SG-Tomix -I $BASE_AMI -F m1.small -x ubuntu -N template-tomix-$NOW -r "role[tomix]" | tee deploy.log 
 
 SUCCESS=$(tail -22 deploy.log | grep 'Chef Client finished' | awk '{print $1}')
 EMPTY=""

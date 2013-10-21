@@ -25,3 +25,5 @@ knife[:availability_zone] = "us-east-1a"
 knife[:flavor] = "m1.small"
 knife[:image] = "ami-dfebbab6"
 
+knife[:aws_ssh_key_id] = "youappi-PH2"
+knife[:identity_file] = "~/.ssh/youappi-PH2.pem"
