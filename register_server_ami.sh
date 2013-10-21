@@ -16,7 +16,7 @@ EMPTY_ID=""
 if [ "$TEMPLATE_AMI" != "$EMPTY" ]
 then
 	echo "##teamcity[progressMessage 'Creating new intance from template AMI:$TEMPLATE_AMI with version number $VERSION']"
-	bundle exec knife ec2 server create -G PH2-SG-Tomix -I $TEMPLATE_AMI -F m1.small -x ubuntu -S youappi-PH2 -N worker-$VERSION--$NOW  | tee deploy.log 
+	bundle exec knife ec2 server create -G PH2-SG-Tomix -I $TEMPLATE_AMI -F m1.small -x ubuntu -N worker-$VERSION--$NOW  | tee deploy.log 
 fi
 
 SUCCESS=$(tail -22 deploy.log | grep 'Chef Client finished' | awk '{print $1}')
