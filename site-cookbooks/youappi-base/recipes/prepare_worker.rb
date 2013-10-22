@@ -32,3 +32,7 @@ service "collectd" do
   action [ :enable ]
 end
 
+template "/etc/enviroment" do
+	source "enviroment.erb"
+end
+

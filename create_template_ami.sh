@@ -7,7 +7,7 @@ source ~/.bashrc
 
 
 rm -f deploy.log
-NOW=$(date +"%d_%m__%H_%M")
+NOW=$(date +"%d-%m--%H-%M")
 VERSION=$(bundle exec knife cookbook  list | grep youappi | awk '{print $2}')
 BASE_AMI=ami-dfebbab6
 TEMPLATE_NAME="worker-template-$NOW"
@@ -33,8 +33,8 @@ then
 	mysql deploy -e "INSERT INTO template_ami (ami_id,ami_name,cookbook_version) VALUES('$IMAGE_ID','$TEMPLATE_NAME','$VERSION')"
 	echo "##teamcity[buildStatus status='SUCCESS' text='{build.status.text} : registered new AMI NAME : $TEMPLATE_NAME with ID $IMAGE_ID']"
 
-	bundle exec knife client delete $TEMPLATE_NAME
-	bundle exec knife node delete $TEMPLATE_NAME
+	bundle exec knife client delete $TEMPLATE_NAME -y
+	bundle exec knife node delete $TEMPLATE_NAME -y
 	exit 0
 else
 	
