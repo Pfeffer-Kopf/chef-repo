@@ -113,5 +113,5 @@ end
 
 service "collectd" do
   supports :status => true, :restart => true
-  action [ :enable, :start ]
+  action [ :disable, :stop ]
 end

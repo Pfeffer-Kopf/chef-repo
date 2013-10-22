@@ -13,11 +13,22 @@ service "tomcat7" do
   action :stop
 end
 
-remote_file "/usr/share/tomcat7/webapp/ROOT.war" do
-  source "https://s3.amazonaws.com/deploy.youappi.com/releases/latests"
-  action create_if_missing
+service "collectd" do
+  action :stop
 end
 
-service "tomcat7" do
-  action :start
+remote_file "/var/lib/tomcat7/webapps/ROOT.war" do
+  source "https://s3.amazonaws.com/deploy.youappi.com/releases/latests/ROOT.war"
+  action :create_if_missing
 end
+
+directory "/var/lib/tomcat7/webapps/ROOT" do
+  action :delete
+  recursive true
+end
+
+service "collectd" do
+  supports :status => true, :restart => true
+  action [ :enable ]
+end
+
