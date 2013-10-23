@@ -27,7 +27,6 @@ then
 	INSTANCE_ID=$(tail -19 deploy.log | grep 'Instance' | awk '{print $3}')
 	echo
 	echo creating $INSTANCE_ID
-	TEMPLATE_NAME="tomix--$NOW--$VERSION"
 	echo creating ami : $TEMPLATE_NAME from instance ID : $INSTANCE_ID
 	IMAGE_ID=$(ec2-create-image $INSTANCE_ID -n $TEMPLATE_NAME | awk '{print $2}')
 	echo
@@ -35,8 +34,7 @@ then
 	
 	mysql deploy -e "INSERT INTO worker_ami (ami_id,ami_name,release_id) VALUES('$IMAGE_ID','$TEMPLATE_NAME','$VERSION')"
 	echo "##teamcity[buildStatus status='SUCCESS' text='{build.status.text} : registered new worker AMI NAME ID : $TEMPLATE_NAME']"
-	#bundle exec knife client delete $TEMPLATE_AMI
-	#bundle exec knife node delete $TEMPLATE_AMI
+	#bundle exec knife ec2 server delete $INSTANCE_ID -P --node-name $TEMPLATE_NAME -y
 	exit 0
 else
 	

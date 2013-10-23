@@ -28,11 +28,14 @@ directory "/var/lib/tomcat7/webapps/ROOT" do
 end
 
 service "collectd" do
-  supports :status => true, :restart => true
-  action [ :enable ]
+  action [ :disable ]
 end
 
-template "/etc/enviroment" do
-	source "enviroment.erb"
+service "tomcat7" do
+  action [ :disable ]
 end
+
+#template "/etc/enviroment" do
+#	source "enviroment.erb"
+#end
 

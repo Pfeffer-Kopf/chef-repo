@@ -23,7 +23,7 @@ if [ "$SUCCESS" != "$EMPTY" ]
 then
 	echo	
 	echo Deleting client.pem file from /etc/chef on the target instance
-	bundle exec knife ssh 'name: $TEMPLATE_NAME' 'sudo rm /etc/chef/client.pem' -x ubuntu
+	bundle exec knife ssh 'name:worker-template*' 'sudo rm /etc/chef/client.pem' -x ubuntu
 	INSTANCE_ID=$(tail -19 deploy.log | grep 'Instance' | awk '{print $3}')
 	echo
 	echo creating $INSTANCE_ID
@@ -34,8 +34,8 @@ then
 	mysql deploy -e "INSERT INTO template_ami (ami_id,ami_name,cookbook_version) VALUES('$IMAGE_ID','$TEMPLATE_NAME','$VERSION')"
 	echo "##teamcity[buildStatus status='SUCCESS' text='{build.status.text} : registered new AMI NAME : $TEMPLATE_NAME with ID $IMAGE_ID']"
 
-	#bundle exec knife client delete $TEMPLATE_NAME -y
-	#bundle exec knife node delete $TEMPLATE_NAME -y
+	bundle exec knife client delete $TEMPLATE_NAME -y
+	bundle exec knife node delete $TEMPLATE_NAME -y
 	exit 0
 else
 	
