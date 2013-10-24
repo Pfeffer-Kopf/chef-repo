@@ -13,15 +13,17 @@ bash "set_variables" do
   user "root"
   cwd "/etc"
   code <<-EOT
-	echo "export YOUAPPI_HOME=/youappi/central >> /etc/enviroment"
+	echo  YOUAPPI_HOME=/youappi/central >> /etc/enviroment
+	echo $ROLE
 	if [ "$ROLE" = "API" ]
 	then
-		echo "export SERVER_NAME=tomix-$(date +"%d%m%H%M%S") >> /etc/enviroment"
+		echo SERVER_NAME=tomix-$(date +"%d%m%H%M%S") >> /etc/enviroment
 	else
-		echo "export SERVER_NAME=mgn-$(date +"%d%m%H%M%S") >> /etc/enviroment"
+		echo SERVER_NAME=mgn-$(date +"%d%m%H%M%S") >> /etc/enviroment
 	fi
+ 	source /etc/enviroment
 	
-	sed -i -e 's/SERVER_NAME/$SERVER_NAME/g' /opt/collectd/etc/collectd.conf
+	sed -i -e "s/SERVER_NAME/$SERVER_NAME/g" /opt/collectd/etc/collectd.conf
   EOT
 end
 

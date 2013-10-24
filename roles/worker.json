@@ -1,0 +1,16 @@
+{
+  "name": "worker",
+  "description": "Create new AMI with latest release",
+  "json_class": "Chef::Role",
+  "default_attributes": {
+  },
+  "override_attributes": {
+  },
+  "chef_type": "role",
+  "run_list": [
+    "recipe[youappi-base::prepare_worker]",
+    "recipe[chef-client::delete_validation]"
+  ],
+  "env_run_lists": {
+  }
+}
