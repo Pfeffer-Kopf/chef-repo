@@ -8,33 +8,32 @@
 #
 
 
+ENV['YOUAPPI_HOME'] = '/youappi/central/'
 
-bash "set_variables" do
-  user "root"
-  cwd "/etc"
-  code <<-EOT
-	echo  YOUAPPI_HOME=/youappi/central >> /etc/enviroment
-	echo $ROLE
-	if [ "$ROLE" = "API" ]
-	then
-		echo SERVER_NAME=tomix-$(date +"%d%m%H%M%S") >> /etc/enviroment
-	else
-		echo SERVER_NAME=mgn-$(date +"%d%m%H%M%S") >> /etc/enviroment
-	fi
- 	source /etc/enviroment
-	
-	sed -i -e "s/SERVER_NAME/$SERVER_NAME/g" /opt/collectd/etc/collectd.conf
-  EOT
+time = Time.now.strftime("%m%d%H%M%S")
+server = ''
+if ENV['ROLE'] == 'API'
+	server = 'tomix-' + time
+	ENV['SERVER_NAME'] = sever
+elsif ENV['ROLE'] == 'MGN'
+	server = 'mgn-' + time
+	ENV['SERVER_NAME'] = server
 end
+
+
+text = File.read('/opt/collectd/etc/collectd.conf')
+text.gsub!(/SERVER_NAME/,server)
+File.open('/opt/collectd/etc/collectd.conf','w') { |f| f.write(text)}
+
 
 
 
 service "collectd" do
-  action [ :enable, :start ]
+  action [ :enable, :restart ]
 end
 
 service "tomcat7" do
-  action [ :enable, :start ]
+  action [ :enable, :restart ]
 end
 
 

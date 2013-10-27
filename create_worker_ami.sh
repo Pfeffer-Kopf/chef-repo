@@ -35,7 +35,8 @@ then
 	mysql deploy -e "INSERT INTO worker_ami (ami_id,ami_name,release_id) VALUES('$IMAGE_ID','$TEMPLATE_NAME','$VERSION')"
 	echo "##teamcity[progressMessage 'Sleeping 2min before terminating instance $INSTANCE_ID']"
 	sleep 2m
-	bundle exec knife ec2 server delete $INSTANCE_ID -P --node-name $TEMPLATE_NAME -y
+	#bundle exec knife ec2 server delete $INSTANCE_ID -P --node-name $TEMPLATE_NAME -y
+	bundle exec knife ec2 server delete $INSTANCE_ID -y
         echo "##teamcity[buildStatus status='SUCCESS' text='{build.status.text} : registered new worker AMI NAME ID : $TEMPLATE_NAME']"
 	exit 0
 else
