@@ -5,7 +5,6 @@
 
 source ~/.bashrc
 
-
 rm -f deploy.log
 
 NOW=$(date +"%d-%m--%H-%M")
