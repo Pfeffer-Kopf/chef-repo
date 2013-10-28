@@ -37,8 +37,15 @@ then
 	sleep 2m
 	#bundle exec knife ec2 server delete $INSTANCE_ID -P --node-name $TEMPLATE_NAME -y
 	bundle exec knife ec2 server delete $INSTANCE_ID -y
-        echo "##teamcity[buildStatus status='SUCCESS' text='{build.status.text} : registered new worker AMI NAME ID : $TEMPLATE_NAME']"
-	exit 0
+	if [ "$IMAGE_ID" != "" ]
+	then 
+	        echo "##teamcity[buildStatus status='SUCCESS' text='{build.status.text} : registered new AMI name : $TEMPLATE_NAME , ID : $IMAGE_ID']"
+		exit 0
+	else
+		
+	        echo "##teamcity[buildStatus status='FAILED' text='{build.status.text} : Could not create AMI from isntance ]"
+		exit 1
+	fi
 else
 	
 	echo "##teamcity[buildStatus status='FAILURE' text='{build.status.text} : failed to create a new tomix AMI']"
