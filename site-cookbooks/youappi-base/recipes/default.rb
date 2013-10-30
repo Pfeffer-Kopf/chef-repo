@@ -19,7 +19,5 @@ commands ['/etc/init.d/tomcat7 restart', '/etc/init.d/tomcat7 stop', '/etc/init.
 end
 
 
-template "/etc/nginx/sites-available/default" do
-        source "default.erb"
-end
+
 

@@ -8,22 +8,18 @@
 #
 
 
-ENV['YOUAPPI_HOME'] = '/youappi/asg/'
+ENV['YOUAPPI_HOME'] = '/youappi/central/asgard/'
+
 
 time = Time.now.strftime("%m%d%H%M%S")
-server = ''
+server = 'mgn-' + time
+
+ENV['SERVER_NAME'] = server
+ENV['ROLE'] = 'MGN' 
+
 file = '/opt/collectd/etc/collectd.conf'
-if ENV['ROLE'] == 'API'
-	server = 'tomix-' + time
-	ENV['SERVER_NAME'] = sever
-elsif ENV['ROLE'] == 'MGN'
-	server = 'mgn-' + time
-	ENV['SERVER_NAME'] = server
-end
-
-
 text = File.read(file)
-text.gsub!(/SERVER_NAME/,server)
+text.gsub!(/SERVER_NAME/,"collectd-#{server}")
 File.open(file,'w') { |f| f.write(text)}
 
 

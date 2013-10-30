@@ -35,7 +35,9 @@ service "tomcat7" do
   action [ :disable ]
 end
 
-#template "/etc/enviroment" do
-#	source "enviroment.erb"
-#end
 
+directory "/youappi/logs" do
+  owner "tomcat7"
+  group "tomcat7"
+  action :create
+end
