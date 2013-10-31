@@ -33,9 +33,10 @@ then
 	echo registering AMI in mysql table deploy.template_ami 
 	mysql deploy -e "INSERT INTO template_ami (ami_id,ami_name,cookbook_version) VALUES('$IMAGE_ID','$TEMPLATE_NAME','$VERSION')"
 	echo "##teamcity[buildStatus status='SUCCESS' text='{build.status.text} : registered new AMI NAME : $TEMPLATE_NAME with ID $IMAGE_ID']"
-
-	bundle exec knife client delete $TEMPLATE_NAME -y
-	bundle exec knife node delete $TEMPLATE_NAME -y
+        bundle exec knife ec2 server delete $INSTANCE_ID -P --node-name $TEMPLATE_NAME -y
+        #bundle exec knife ec2 server delete $INSTANCE_ID -y
+	#bundle exec knife client delete $TEMPLATE_NAME -y
+	#bundle exec knife node delete $TEMPLATE_NAME -y
 	exit 0
 else
 	
