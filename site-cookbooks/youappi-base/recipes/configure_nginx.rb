@@ -13,6 +13,9 @@ template "/etc/nginx/sites-available/nginx-status" do
         source "nginx-status.erb"
 end
 
+template "/etc/php5/fpm/pool.d/www.conf" do
+	source "www.conf.erb"
+end
 
 link "/etc/nginx/sites-enabled/default" do
   to "/etc/nginx/sites-available/default"
@@ -33,7 +36,7 @@ directory "/var/www/" do
   owner "root"
   group "root"
   recursive true
-  mode 00644
+  mode 0777
   action :create
 end
 
