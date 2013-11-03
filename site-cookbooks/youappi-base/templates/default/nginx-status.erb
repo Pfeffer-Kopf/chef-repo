@@ -1,0 +1,14 @@
+server {
+        listen   8011;
+        server_name _;
+
+ ### Status location, used by collectd
+        location / {
+            stub_status on;
+            access_log   off;
+            allow 127.0.0.1;
+            deny all;
+        }
+
+}
+

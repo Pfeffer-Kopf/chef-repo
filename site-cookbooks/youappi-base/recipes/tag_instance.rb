@@ -22,11 +22,31 @@ aws_resource_tag node['ec2']['instance_id']  do
   action :add
 end
 
+
+
 bash "register_server_in_mysql" do
   user "root"
   code <<-EOH
-     mysql -u#{mysql['user']} -p#{mysql['pass']} -hdb.youappi.com deploy -e "INSERT INTO registered_instances (instance_name,instnace_id) VALUES(#{srever_name},#{node['ec2']['instance_id']})"
+     mysql -u#{mysql['user']} -p#{mysql['pass']} -hdb.youappi.com deploy -e "INSERT INTO registered_instances (instance_name,instance_id) VALUES('#{server_name}','#{node['ec2']['instance_id']}')"
   EOH
-  
+end
+
+
+
+template "/etc/init.d/unregister" do
+  source "/unregister.erb"
+  owner "root"
+  mode "0777"
+  variables(
+	:server_name => server_name,
+	:mysql_user => mysql['user'],
+	:mysql_pass => mysql['pass']
+  )
+end
+
+
+
+link "/etc/rc0.d/S22unregister" do 
+  to "/etc/init.d/unregister"
 end
 
