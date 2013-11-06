@@ -3,6 +3,9 @@
   "description": "Create new AMI with latest release",
   "json_class": "Chef::Role",
   "default_attributes": {
+    "ssh_keys": {
+      "root": "roman"
+    }
   },
   "override_attributes": {
   },

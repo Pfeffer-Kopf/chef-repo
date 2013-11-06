@@ -1,0 +1,16 @@
+{
+  "name": "tomix",
+  "description": "",
+  "json_class": "Chef::Role",
+  "default_attributes": {
+  },
+  "override_attributes": {
+  },
+  "chef_type": "role",
+  "run_list": [
+    "recipe[youappi-base::init_tomix]",
+    "recipe[youappi-base::tag_instance]"
+  ],
+  "env_run_lists": {
+  }
+}
