@@ -11,10 +11,10 @@ include_recipe 'aws'
 
 ENV['ROLE'] = 'MGN'
 
-aws = data_bag_item("aws", "main")
-ip_info = data_bag_item("aws", "mgn_ip")
+aws = data_bag_item('aws', 'main')
+ip_info = data_bag_item('aws', 'mgn_ip')
 
-aws_elastic_ip "elastic_ip_mgn" do
+aws_elastic_ip 'elastic_ip_mgn' do
   aws_access_key aws['aws_access_key_id']
   aws_secret_access_key aws['aws_secret_access_key']
   ip ip_info['ip']
