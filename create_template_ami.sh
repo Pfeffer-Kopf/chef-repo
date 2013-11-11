@@ -9,7 +9,7 @@ source ~/.bashrc
 rm -f deploy.log
 NOW=$(date +"%d-%m--%H-%M")
 VERSION=$(bundle exec knife cookbook  list | grep youappi | awk '{print $2}')
-BASE_AMI=ami-dfebbab6
+BASE_AMI=ami-6b2c7702
 TEMPLATE_NAME="worker-template-$NOW"
 echo "##teamcity[progressMessage 'Creating new intance from youappi-base cookbook version $VERSION']"
 bundle exec knife ec2 server create -G PH2-SG-Tomix -I $BASE_AMI -F m1.small -x ubuntu -N $TEMPLATE_NAME -r "role[template]" | tee deploy.log 

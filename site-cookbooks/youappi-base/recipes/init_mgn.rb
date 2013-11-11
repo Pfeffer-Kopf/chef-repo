@@ -35,13 +35,3 @@ aws_elastic_ip "elastic_ip_mgn" do
   action :associate
 end
 
-
-service "collectd" do
-  action [ :enable, :restart ]
-end
-
-service "tomcat7" do
-  action [ :enable, :restart ]
-end
-
-

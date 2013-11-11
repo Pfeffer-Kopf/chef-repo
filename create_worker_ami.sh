@@ -32,10 +32,14 @@ then
 	echo registering AMI ID $IMAGE_ID in mysql table deploy.worker_ami
 	
 	mysql deploy -e "INSERT INTO worker_ami (ami_id,ami_name,release_id) VALUES('$IMAGE_ID','$TEMPLATE_NAME','$VERSION')"
-	echo "##teamcity[progressMessage 'Sleeping 2min before terminating instance $INSTANCE_ID']"
-	sleep 2m
-	#bundle exec knife ec2 server delete $INSTANCE_ID -P --node-name $TEMPLATE_NAME -y
-	bundle exec knife ec2 server delete $INSTANCE_ID -y
+        
+        if [ "$1" == "delete" ]
+	then 
+		echo "##teamcity[progressMessage 'Sleeping 2min before terminating instance $INSTANCE_ID']"
+		sleep 2m
+		bundle exec knife ec2 server delete $INSTANCE_ID -y
+	fi
+      
 	if [ "$IMAGE_ID" != "" ]
 	then 
 	        echo "##teamcity[buildStatus status='SUCCESS' text='{build.status.text} : registered new AMI name : $TEMPLATE_NAME , ID : $IMAGE_ID']"
