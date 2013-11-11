@@ -17,13 +17,13 @@ then
 	exit 1
 else
 	CONCURRENT=2
-	if [ INSTANCE_COUNT == 2 ]
+	if [ "$INSTANCE_COUNT" == "2" ]
 	then
 	    CONCURRENT=1
 	fi
 	echo ${CONCURRENT}
 	curl -d "name=tomix_cluster&appName=tomix_cluster&imageId=$AMI_ID&instanceType=m1.medium&keyName=youappi-PH2&selectedSecurityGroups=PH2-SG-Tomix&relaunchCount=${INSTANCE_COUNT}&concurrentRelaunches=${CONCURRENT}&newestFirst=false&afterBootWait=30" "$ASGARD/us-east-1/push/startRolling"
-	echo "##teamcity[buildStatus status='SUCCESS' text='{build.status.text} : Initialized rolling push of version $VERSION with $AMI_ID , replacing $INSTANCE_COUNT']"
+	echo "##teamcity[buildStatus status='SUCCESS' text='{build.status.text} : Initialized rolling push of version $VERSION with $AMI_ID , replacing $INSTANCE_COUNT , concurrently replacing $CONCURRENT']"
 fi
 
 
