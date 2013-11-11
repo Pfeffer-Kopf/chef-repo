@@ -15,7 +15,7 @@ TEMPLATE_NAME="worker-$NOW--$VERSION"
 if [ "$TEMPLATE_AMI" != "" ]
 then
 	echo "##teamcity[progressMessage 'Creating new intance from template AMI:$TEMPLATE_AMI with version number $VERSION']"
-	bundle exec knife ec2 server create -G PH2-SG-Tomix -I $TEMPLATE_AMI -F m1.small -x ubuntu -N $TEMPLATE_NAME -r "role[worker]"  | tee deploy.log 
+	bundle exec knife ec2 server create -G PH2-SG-Tomix -I ${TEMPLATE_AMI} -F m1.small -x ubuntu -N ${TEMPLATE_NAME} -r "role[worker]"  | tee deploy.log
 fi
 
 SUCCESS=$(tail -22 deploy.log | grep 'Chef Client finished' | awk '{print $1}')
@@ -25,11 +25,11 @@ if [ "$SUCCESS" != "" ]
 then
 	INSTANCE_ID=$(tail -19 deploy.log | grep 'Instance' | awk '{print $3}')
 	echo
-	echo creating $INSTANCE_ID
-	echo creating ami : $TEMPLATE_NAME from instance ID : $INSTANCE_ID
-	IMAGE_ID=$(ec2-create-image $INSTANCE_ID -n $TEMPLATE_NAME | awk '{print $2}')
+	echo creating ${INSTANCE_ID}
+	echo creating ami : ${TEMPLATE_NAME} from instance ID : ${INSTANCE_ID}
+	IMAGE_ID=$(ec2-create-image ${INSTANCE_ID} -n ${TEMPLATE_NAME} | awk '{print $2}')
 	echo
-	echo registering AMI ID $IMAGE_ID in mysql table deploy.worker_ami
+	echo registering AMI ID ${IMAGE_ID} in mysql table deploy.worker_ami
 	
 	mysql deploy -e "INSERT INTO worker_ami (ami_id,ami_name,release_id) VALUES('$IMAGE_ID','$TEMPLATE_NAME','$VERSION')"
         
@@ -37,7 +37,7 @@ then
 	then 
 		echo "##teamcity[progressMessage 'Sleeping 2min before terminating instance $INSTANCE_ID']"
 		sleep 2m
-		bundle exec knife ec2 server delete $INSTANCE_ID -y
+		bundle exec knife ec2 server delete ${INSTANCE_ID} -y
 	fi
       
 	if [ "$IMAGE_ID" != "" ]
