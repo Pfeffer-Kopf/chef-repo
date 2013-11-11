@@ -9,21 +9,7 @@
 
 include_recipe 'aws'
 
-ENV['YOUAPPI_HOME'] = '/youappi/central/asgard/'
-
-
-time = Time.now.strftime("%m%d%H%M%S")
-server = 'mgn-' + time
-
-ENV['SERVER_NAME'] = server
-ENV['ROLE'] = 'MGN' 
-
-file = '/opt/collectd/etc/collectd.conf'
-text = File.read(file)
-text.gsub!(/SERVER_NAME/,"collectd-#{server}")
-File.open(file,'w') { |f| f.write(text)}
-
-
+ENV['ROLE'] = 'MGN'
 
 aws = data_bag_item("aws", "main")
 ip_info = data_bag_item("aws", "mgn_ip")
