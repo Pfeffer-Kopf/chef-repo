@@ -29,7 +29,7 @@ aws_resource_tag node['ec2']['instance_id']  do
   aws_access_key aws['aws_access_key_id']
   aws_secret_access_key aws['aws_secret_access_key']
   tags({'Name' => "BROKER-#{id}"})
-  action :add
+  action :update
 end
 
 template '/etc/init.d/unregister_broker' do
