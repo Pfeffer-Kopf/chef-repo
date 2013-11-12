@@ -57,7 +57,7 @@ template '/etc/init.d/unregister' do
   owner 'root'
   mode '0777'
   variables(
-      :server_name => server_name,
+      :server_name => server,
       :mysql_user => mysql['user'],
       :mysql_pass => mysql['pass']
   )
