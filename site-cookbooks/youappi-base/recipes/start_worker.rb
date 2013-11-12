@@ -15,7 +15,7 @@ mysql = data_bag_item('mysql', 'deploy')
 version = `mysql -u#{mysql['user']} -p#{mysql['pass']} -hdb.youappi.com deploy -e "SELECT version FROM releases ORDER BY release_time DESC LIMIT 1" --column-names=false | awk '{print $1}'`
 time = Time.now.strftime('%m%d%H%M%S')
 
-server = "#{(ENV['ROLE'] == 'API' ? 'tomix' : 'mgn')} -#{time}-#{version.tr("\n", '')}"
+server = "#{(ENV['ROLE'] == 'API' ? 'tomix' : 'mgn')}-#{time}-#{version.tr("\n", '')}"
 
 ENV['SERVER_NAME'] = server
 
