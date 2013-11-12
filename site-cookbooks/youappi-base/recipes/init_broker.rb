@@ -10,8 +10,6 @@
 
 include_recipe 'aws'
 
-
-
 aws = data_bag_item('aws', 'main')
 mysql = data_bag_item('mysql', 'deploy')
 
@@ -22,7 +20,7 @@ bash 'register_broker_in_mysql' do
   EOH
 end
 
-id = `mysql -u#{mysql['user']} -p#{mysql['pass']} -hdb.youappi.com deploy -e "SELECT id FROM registered_brokers WHERE instance_id ='#{node['ec2']['instance_id']}'" --column-names=false | awk '{print $1}'`
+id = `sudo mysql -u#{mysql['user']} -p#{mysql['pass']} -hdb.youappi.com deploy -e "SELECT id FROM registered_brokers WHERE instance_id ='#{node['ec2']['instance_id']}'" --column-names=false | awk '{print $1}'`
 
 
 aws_resource_tag node['ec2']['instance_id']  do
