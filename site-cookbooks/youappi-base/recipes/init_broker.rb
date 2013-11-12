@@ -21,7 +21,8 @@ bash 'register_broker_in_mysql' do
      mysql -u#{mysql['user']} -p#{mysql['pass']} -hdb.youappi.com deploy -e "INSERT INTO registered_brokers (broker_dns, inner_ip, instance_id)  VALUES('#{node['ec2']['public_hostname']}','#{node['ec2']['local_ipv4']}','#{node['ec2']['instance_id']}')"
   EOH
 end
-id = `mysql -u#{mysql['user']} -p#{mysql['pass']} -hdb.youappi.com deploy -e "SELECT id FROM registered_brokers where instance_id = #{node['ec2']['instance_id']}" --column-names=false | awk '{print $1}'`
+
+id = `mysql -u#{mysql['user']} -p#{mysql['pass']} -hdb.youappi.com deploy -e "SELECT id FROM registered_brokers WHERE instance_id ='#{node['ec2']['instance_id']}'" --column-names=false | awk '{print $1}'`
 
 
 aws_resource_tag node['ec2']['instance_id']  do
