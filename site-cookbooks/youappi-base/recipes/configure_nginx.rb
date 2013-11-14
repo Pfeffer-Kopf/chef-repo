@@ -1,6 +1,5 @@
 include_recipe 'mercurial'
 
-
 template '/etc/nginx/sites-available/default' do
   source 'default.erb'
 end
@@ -43,4 +42,6 @@ bash 'checkout_php' do
    hg clone https://#{bitbucket['user']}:#{bitbucket['pass']}@bitbucket.org/ofergarnett/youappi-php --rev stable widget-server
   EOH
 end
+
+
 
