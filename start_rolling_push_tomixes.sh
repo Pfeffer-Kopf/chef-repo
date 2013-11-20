@@ -12,6 +12,10 @@ INSTANCE_COUNT=$(curl -s "$ASGARD/us-east-1/autoScaling/show/tomix_cluster.json"
 echo "##teamcity[progressMessage 'Pushing $AMI_ID into tomix cluster with version $VERSION , replacing $INSTANCE_COUNT isntances']"
 
 
+GROUP=$1
+SIZE=$2
+CLUSTER_NAME=$3
+
 if [ -z "$AMI_ID" ]
 then
 	exit 1
@@ -22,7 +26,7 @@ else
 	    CONCURRENT=1
 	fi
 	echo ${CONCURRENT}
-	curl -d "name=tomix_cluster&appName=tomix_cluster&imageId=$AMI_ID&instanceType=m1.medium&keyName=youappi-PH2&selectedSecurityGroups=PH2-SG-Tomix&relaunchCount=${INSTANCE_COUNT}&concurrentRelaunches=${CONCURRENT}&newestFirst=false&afterBootWait=150" "$ASGARD/us-east-1/push/startRolling"
+	curl -d "name=$CLUSTER_NAME&appName=$CLUSTER_NAME&imageId=$AMI_ID&instanceType=$SIZE&keyName=youappi-PH2&selectedSecurityGroups=$GROUP&relaunchCount=${INSTANCE_COUNT}&concurrentRelaunches=${CONCURRENT}&newestFirst=false&afterBootWait=150" "$ASGARD/us-east-1/push/startRolling"
 	echo "##teamcity[buildStatus status='SUCCESS' text='{build.status.text} : Initialized rolling push of version $VERSION with $AMI_ID , replacing $INSTANCE_COUNT , concurrently replacing $CONCURRENT']"
 fi
 

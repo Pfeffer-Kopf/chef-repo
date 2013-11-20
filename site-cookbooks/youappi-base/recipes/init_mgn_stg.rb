@@ -8,8 +8,6 @@
 #
 
 
-ENV['ROLE'] = 'API'
-ENV['ENV'] = 'prod'
-
-
+ENV['ROLE'] = 'MGN'
+ENV['ENV'] = 'stg'
 

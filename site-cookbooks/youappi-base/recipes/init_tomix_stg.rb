@@ -9,7 +9,7 @@
 
 
 ENV['ROLE'] = 'API'
-ENV['ENV'] = 'prod'
+ENV['ENV'] = 'stg'
 
 
 
