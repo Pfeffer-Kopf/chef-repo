@@ -11,8 +11,9 @@ include_recipe 'aws'
 
 ENV['YOUAPPI_HOME'] = '/youappi/central/' + ENV['ENV']
 
-mysql = data_bag_item('mysql', 'deploy')
-version = `mysql -u#{mysql['user']} -p#{mysql['pass']} -hdb.youappi.com deploy -e "SELECT version FROM releases ORDER BY release_time DESC LIMIT 1" --column-names=false | awk '{print $1}'`
+mysql = data_bag_item('mysql', ENV['ENV'] == 'prod' ? 'deploy' : 'deploy-stg')
+
+version = `mysql -u#{mysql['user']} -p#{mysql['pass']} -h#{mysql['host']} deploy -e "SELECT version FROM releases ORDER BY release_time DESC LIMIT 1" --column-names=false | awk '{print $1}'`
 time = Time.now.strftime('%m%d%H%M%S')
 
 server = "#{(ENV['ROLE'] == 'API' ? 'tomix' : 'mgn')}-#{time}-#{version.tr("\n", '')}#{ENV['ENV']=='stg'?'-stg':''}"
@@ -44,12 +45,11 @@ bash 'set_enviroment' do
 end
 
 
-if ENV['ENV'] == 'prod'
 
 	bash 'register_server_in_mysql' do
 	  user 'root'
 	  code <<-EOH
-	     mysql -u#{mysql['user']} -p#{mysql['pass']} -hdb.youappi.com deploy -e "INSERT INTO registered_instances (instance_name,instance_id) VALUES('#{server}','#{node['ec2']['instance_id']}')"
+	     mysql -u#{mysql['user']} -p#{mysql['pass']} -h#{mysql['host']} deploy -e "INSERT INTO registered_instances (instance_name,instance_id) VALUES('#{server}','#{node['ec2']['instance_id']}')"
 	  EOH
 	end
 
@@ -71,7 +71,6 @@ if ENV['ENV'] == 'prod'
 	service 'collectd' do
 	  action [:enable, :restart]
 	end
-end
 
 service 'tomcat7' do
   action [:enable, :restart]

@@ -9,7 +9,7 @@
 
 
 ENV['ROLE'] = 'BROKER'
-ENV['ENV'] = 'prod'
+ENV['ENV'] = 'stg'
 
 
 

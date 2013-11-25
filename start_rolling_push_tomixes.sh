@@ -26,7 +26,7 @@ else
 	    CONCURRENT=1
 	fi
 	echo ${CONCURRENT}
-	curl -d "name=$CLUSTER_NAME&appName=$CLUSTER_NAME&imageId=$AMI_ID&instanceType=$SIZE&keyName=youappi-PH2&selectedSecurityGroups=$GROUP&relaunchCount=${INSTANCE_COUNT}&concurrentRelaunches=${CONCURRENT}&newestFirst=false&afterBootWait=150" "$ASGARD/us-east-1/push/startRolling"
+	curl -d "name=$CLUSTER_NAME&appName=$CLUSTER_NAME&imageId=$AMI_ID&instanceType=$SIZE&keyName=youappi-PH2&selectedSecurityGroups=$GROUP&relaunchCount=${INSTANCE_COUNT}&concurrentRelaunches=${CONCURRENT}&newestFirst=false&afterBootWait=200" "$ASGARD/us-east-1/push/startRolling"
 	echo "##teamcity[buildStatus status='SUCCESS' text='{build.status.text} : Initialized rolling push of version $VERSION with $AMI_ID , replacing $INSTANCE_COUNT , concurrently replacing $CONCURRENT']"
 fi
 
