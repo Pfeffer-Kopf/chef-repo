@@ -12,11 +12,11 @@ include_recipe 'aws'
 
 aws = data_bag_item('aws', 'main')
 mysql = data_bag_item('mysql', 'deploy')
-
+env = ENV['ENV']
 bash 'register_broker_in_mysql' do
   user 'root'
   code <<-EOH
-     mysql -u#{mysql['user']} -p#{mysql['pass']} -h#{mysql['host']} deploy -e "INSERT INTO registered_brokers (broker_dns, inner_ip, instance_id, enviroment)  VALUES('#{node['ec2']['public_hostname']}','#{node['ec2']['local_ipv4']}','#{node['ec2']['instance_id']}','#{ENV['ENV']}')"
+     mysql -u#{mysql['user']} -p#{mysql['pass']} -h#{mysql['host']} deploy -e "INSERT INTO registered_brokers (broker_dns, inner_ip, instance_id, enviroment)  VALUES('#{node['ec2']['public_hostname']}','#{node['ec2']['local_ipv4']}','#{node['ec2']['instance_id']}','#{env}')"
   EOH
 end
 
