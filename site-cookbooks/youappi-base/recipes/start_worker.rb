@@ -11,12 +11,12 @@ include_recipe 'aws'
 
 ENV['YOUAPPI_HOME'] = '/youappi/central/' + ENV['ENV']
 
-mysql = data_bag_item('mysql', ENV['ENV'] == 'prod' ? 'deploy' : 'deploy-stg')
+mysql = data_bag_item('mysql','deploy')
 
 version = `mysql -u#{mysql['user']} -p#{mysql['pass']} -h#{mysql['host']} deploy -e "SELECT version FROM releases ORDER BY release_time DESC LIMIT 1" --column-names=false | awk '{print $1}'`
 time = Time.now.strftime('%m%d%H%M%S')
 
-server = "#{(ENV['ROLE'] == 'API' ? 'tomix' : 'mgn')}-#{time}-#{version.tr("\n", '')}#{ENV['ENV']=='stg'?'-stg':''}"
+server = "#{(ENV['ROLE'] == 'API' ? 'tomix' : 'mgn')}-#{time}-#{version.tr("\n", '')}#{ENV['ENV']=='stg' ? '-stg' : ''}"
 
 ENV['SERVER_NAME'] = server
 
@@ -45,32 +45,32 @@ bash 'set_enviroment' do
 end
 
 
+bash 'register_server_in_mysql' do
+  user 'root'
+  code <<-EOH
+	     mysql -u#{mysql['user']} -p#{mysql['pass']} -h#{mysql['host']} deploy -e "INSERT INTO registered_instances (instance_name,instance_id,enviroment) VALUES('#{server}','#{node['ec2']['instance_id']}','#{ENV['ENV']}')"
+  EOH
+end
 
-	bash 'register_server_in_mysql' do
-	  user 'root'
-	  code <<-EOH
-	     mysql -u#{mysql['user']} -p#{mysql['pass']} -h#{mysql['host']} deploy -e "INSERT INTO registered_instances (instance_name,instance_id) VALUES('#{server}','#{node['ec2']['instance_id']}')"
-	  EOH
-	end
+template '/etc/init.d/unregister' do
+  source '/unregister.erb'
+  owner 'root'
+  mode '0777'
+  variables(
+      :server_name => server,
+      :mysql_user => mysql['user'],
+      :mysql_pass => mysql['pass'],
+      :mysql_host => mysql['host']
+  )
+end
 
-	template '/etc/init.d/unregister' do
-	  source '/unregister.erb'
-	  owner 'root'
-	  mode '0777'
-	  variables(
-	      :server_name => server,
-	      :mysql_user => mysql['user'],
-	      :mysql_pass => mysql['pass']
-	  )
-	end
+link '/etc/rc0.d/S22unregister' do
+  to '/etc/init.d/unregister'
+end
 
-	link '/etc/rc0.d/S22unregister' do
-	  to '/etc/init.d/unregister'
-	end
-
-	service 'collectd' do
-	  action [:enable, :restart]
-	end
+service 'collectd' do
+  action [:enable, :restart]
+end
 
 service 'tomcat7' do
   action [:enable, :restart]

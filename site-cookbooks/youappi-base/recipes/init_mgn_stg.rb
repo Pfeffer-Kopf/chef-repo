@@ -23,6 +23,6 @@ route53_record "create a record" do
   aws_access_key_id     aws['aws_access_key_id']
   aws_secret_access_key aws['aws_secret_access_key']
 
-  action :create
+  action :update
 end
 

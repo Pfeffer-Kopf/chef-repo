@@ -1,2 +1,2 @@
 #!/bin/bash
-mysql -u<%= @mysql_user %> -p<%= @mysql_pass %> -hdb.youappi.com deploy -e "DELETE FROM registered_brokers where instance_id = '<%= @instance_id %>'"
+mysql -u<%= @mysql_user %> -p<%= @mysql_pass %>  -h<%= @mysql_pass %> deploy -e "DELETE FROM registered_brokers where instance_id = '<%= @instance_id %>'"
