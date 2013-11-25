@@ -23,11 +23,6 @@ aws = data_bag_item('aws', 'main')
 #  aws_access_key_id     aws['aws_access_key_id']
 #  aws_secret_access_key aws['aws_secret_access_key']
 
-<<<<<<< HEAD
 #  action :create
 #end
-=======
-  action :update
-end
->>>>>>> 946d68fc4b3e5add28d0b820a3feffa729d725f8
 
