@@ -13,6 +13,7 @@ include_recipe 'aws'
 aws = data_bag_item('aws', 'main')
 mysql = data_bag_item('mysql', 'deploy')
 env = ENV['ENV']
+
 bash 'register_broker_in_mysql' do
   user 'root'
   code <<-EOH
@@ -20,12 +21,12 @@ bash 'register_broker_in_mysql' do
   EOH
 end
 
-id      = `mysql -u#{mysql['user']} -p#{mysql['pass']} -h#{mysql['host']} deploy -e "SELECT id FROM registered_brokers ORDER BY id DESC LIMIT 1'" --column-names=false | awk '{print $1}'`
+id = `mysql -u#{mysql['user']} -p#{mysql['pass']} -h#{mysql['host']} deploy -e "SELECT id FROM registered_brokers ORDER BY id DESC LIMIT 1'" --column-names=false | awk '{print $1}'`
 
 aws_resource_tag node['ec2']['instance_id'] do
   aws_access_key aws['aws_access_key_id']
   aws_secret_access_key aws['aws_secret_access_key']
-  tags({'Name' => "BROKER-#{id}"})
+  tags({'Name' => "broker-#{id}-#{env}"})
   action :update
 end
 
