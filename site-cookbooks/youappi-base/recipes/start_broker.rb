@@ -37,7 +37,8 @@ template '/etc/init.d/unregister_broker' do
   variables(
       :mysql_user => mysql['user'],
       :mysql_pass => mysql['pass'],
-      :mysql_host => mysql['host']
+      :mysql_host => mysql['host'],
+      :instance_id => node['ec2']['instance_id']
   )
 
 end
