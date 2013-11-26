@@ -35,7 +35,6 @@ template '/etc/init.d/unregister_broker' do
   owner 'root'
   mode '0777'
   variables(
-      :server_name => server,
       :mysql_user => mysql['user'],
       :mysql_pass => mysql['pass'],
       :mysql_host => mysql['host']
