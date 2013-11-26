@@ -21,7 +21,7 @@ bash 'register_broker_in_mysql' do
   EOH
 end
 
-id = `mysql -u#{mysql['user']} -p#{mysql['pass']} -h#{mysql['host']} deploy -e "SELECT id FROM registered_brokers ORDER BY id DESC LIMIT 1'" --column-names=false | awk '{print $1}'`
+id = `mysql -u#{mysql['user']} -p#{mysql['pass']} -h#{mysql['host']} deploy -e "SELECT id FROM registered_brokers ORDER BY id DESC LIMIT 1" --column-names=false | awk '{print $1}'`
 
 aws_resource_tag node['ec2']['instance_id'] do
   aws_access_key aws['aws_access_key_id']
