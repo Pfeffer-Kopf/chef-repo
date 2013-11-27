@@ -26,7 +26,8 @@ id = `mysql -u#{mysql['user']} -p#{mysql['pass']} -h#{mysql['host']} deploy -e "
 aws_resource_tag node['ec2']['instance_id'] do
   aws_access_key aws['aws_access_key_id']
   aws_secret_access_key aws['aws_secret_access_key']
-  tags({'Name' => "broker-#{id}-#{env}"})
+  tags({'Name' => "broker-#{id.strip}-#{env}",
+	'Env'  => env })
   action :update
 end
 
