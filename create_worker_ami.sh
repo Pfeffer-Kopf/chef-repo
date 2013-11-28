@@ -12,10 +12,12 @@ VERSION=$(mysql deploy -e "SELECT version FROM releases ORDER BY release_time DE
 TEMPLATE_AMI=$(mysql deploy -e "SELECT ami_id FROM template_ami ORDER BY registration_time DESC LIMIT 1" --column-names=false | awk '{print $1}')
 TEMPLATE_NAME="worker-$NOW--$VERSION"
 
+PARAMS="{ \"release\":$2 , \"branch\":$3}"
+
 if [ "$TEMPLATE_AMI" != "" ]
 then
 	echo "##teamcity[progressMessage 'Creating new intance from template AMI:$TEMPLATE_AMI with version number $VERSION']"
-	bundle exec knife ec2 server create -G PH2-SG-Tomix -I ${TEMPLATE_AMI} -F m1.small -x ubuntu -N ${TEMPLATE_NAME} -r "role[worker]"  | tee deploy.log
+	bundle exec knife ec2 server create -G PH2-SG-Tomix -I ${TEMPLATE_AMI} -F m1.small -x ubuntu -j ${PARAMS} -N ${TEMPLATE_NAME} -r "role[worker]"  | tee deploy.log
 fi
 
 SUCCESS=$(tail -22 deploy.log | grep 'Chef Client finished' | awk '{print $1}')
