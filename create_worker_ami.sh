@@ -8,15 +8,16 @@ source ~/.bashrc
 rm -f deploy.log
 
 NOW=$(date +"%d-%m--%H-%M")
-VERSION=$(mysql deploy -e "SELECT version FROM releases ORDER BY release_time DESC LIMIT 1" --column-names=false | awk '{print $1}')
+VERSION=$3
+BRANCH=$2
 TEMPLATE_AMI=$(mysql deploy -e "SELECT ami_id FROM template_ami ORDER BY registration_time DESC LIMIT 1" --column-names=false | awk '{print $1}')
 TEMPLATE_NAME="worker-$NOW--$VERSION"
-
-PARAMS="{ \"release\":$2 , \"branch\":$3}"
+PARAMS='{"release":"'$VERSION'","branch":"'$BRANCH'"}'
+echo $PARAMS
 
 if [ "$TEMPLATE_AMI" != "" ]
 then
-	echo "##teamcity[progressMessage 'Creating new intance from template AMI:$TEMPLATE_AMI with version number $VERSION']"
+	echo "##teamcity[progressMessage 'Creating new intance from template AMI:$TEMPLATE_AMI with version number $VERSION from branch $2']"
 	bundle exec knife ec2 server create -G PH2-SG-Tomix -I ${TEMPLATE_AMI} -F m1.small -x ubuntu -j ${PARAMS} -N ${TEMPLATE_NAME} -r "role[worker]"  | tee deploy.log
 fi
 
@@ -44,7 +45,7 @@ then
       
 	if [ "$IMAGE_ID" != "" ]
 	then 
-	        echo "##teamcity[buildStatus status='SUCCESS' text='{build.status.text} : registered new AMI name : $TEMPLATE_NAME , ID : $IMAGE_ID']"
+	        echo "##teamcity[buildStatus status='SUCCESS' text='{build.status.text} : registered new AMI name : $TEMPLATE_NAME , ID : $IMAGE_ID branch : $2']"
 		exit 0
 	else
 		
