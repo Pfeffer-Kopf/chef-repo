@@ -13,7 +13,6 @@ BRANCH=$2
 TEMPLATE_AMI=$(mysql deploy -e "SELECT ami_id FROM template_ami ORDER BY registration_time DESC LIMIT 1" --column-names=false | awk '{print $1}')
 TEMPLATE_NAME="worker-$NOW--$VERSION"
 PARAMS='{"release":"'$VERSION'","branch":"'$BRANCH'"}'
-echo $PARAMS
 
 if [ "$TEMPLATE_AMI" != "" ]
 then
@@ -21,7 +20,7 @@ then
 	bundle exec knife ec2 server create -G PH2-SG-Tomix -I ${TEMPLATE_AMI} -F m1.small -x ubuntu -j ${PARAMS} -N ${TEMPLATE_NAME} -r "role[worker]"  | tee deploy.log
 fi
 
-SUCCESS=$(tail -22 deploy.log | grep 'Chef Client finished' | awk '{print $1}')
+SUCCESS=$(tail -23 deploy.log | grep 'Chef Client finished' | awk '{print $1}')
 
 echo "$SUCCESS"
 if [ "$SUCCESS" != "" ]
