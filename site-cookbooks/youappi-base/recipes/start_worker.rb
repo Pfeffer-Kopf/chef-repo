@@ -13,6 +13,8 @@ env = node['env']
 role = node['role']
 
 ENV['YOUAPPI_HOME'] = '/youappi/central/' + env
+ENV['ENV'] = env
+ENV['ROLE'] = role
 
 aws = data_bag_item('aws', 'main')
 mysql = data_bag_item('mysql', 'deploy')
@@ -42,7 +44,7 @@ end
 bash 'set_enviroment' do
   user 'root'
   code <<-EOH
-     echo "export SERVER_NAME=#{server}\nexport ROLE=#{role}\nexport YOUAPPI_HOME=#{ENV['YOUAPPI_HOME']}\nexport ENV=#{env}\n" >> /etc/environment
+     echo "export ROLE=#{role}\nexport SERVER_NAME=#{server}\nexport ROLE=#{role}\nexport YOUAPPI_HOME=#{ENV['YOUAPPI_HOME']}\nexport ENV=#{env}\n" >> /etc/environment
   EOH
 end
 
@@ -64,6 +66,20 @@ template '/etc/init.d/unregister' do
       :mysql_pass => mysql['pass'],
       :mysql_host => mysql['host']
   )
+end
+
+
+
+if env == 'prod' && role == 'MGN'
+  aws = data_bag_item('aws', 'main')
+  ip_info = data_bag_item('aws', 'mgn_ip')
+
+  aws_elastic_ip 'elastic_ip_mgn' do
+    aws_access_key aws['aws_access_key_id']
+    aws_secret_access_key aws['aws_secret_access_key']
+    ip ip_info['ip']
+    action :associate
+  end
 end
 
 link '/etc/rc0.d/S22unregister' do

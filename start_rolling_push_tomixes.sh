@@ -5,18 +5,16 @@
 
 source ~/.bashrc
 
+GROUP=$1
+SIZE=$2
+CLUSTER_NAME=$3
 BRANCH=$4
 
 AMI_ID=$(mysql deploy -e "SELECT ami_id FROM worker_ami WHERE branch='$BRANCH' ORDER BY registration_time DESC LIMIT 1" --column-names=false | awk '{print $1}')
 VERSION=$(mysql deploy -e "SELECT release_id FROM worker_ami WHERE branch='$BRANCH' ORDER BY registration_time DESC LIMIT 1" --column-names=false | awk '{print $1}')
 INSTANCE_COUNT=$(curl -s "$ASGARD/us-east-1/autoScaling/show/tomix_cluster.json" | jsawk 'return this.instanceCount')
 
-echo "##teamcity[progressMessage 'Pushing $AMI_ID into tomix cluster with version $VERSION , replacing $INSTANCE_COUNT isntances']"
-
-
-GROUP=$1
-SIZE=$2
-CLUSTER_NAME=$3
+echo "##teamcity[progressMessage 'Pushing $AMI_ID into tomix cluster with version $VERSION from $BRANCH, replacing $INSTANCE_COUNT isntances']"
 
 if [ -z "$AMI_ID" ]
 then

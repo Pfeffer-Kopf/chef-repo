@@ -14,7 +14,7 @@ AMI_ID=$(mysql deploy -e "SELECT ami_id FROM worker_ami WHERE branch='$BRANCH' O
 VERSION=$(mysql deploy -e "SELECT release_id FROM worker_ami WHERE branch='$BRANCH' ORDER BY registration_time DESC LIMIT 1" --column-names=false | awk '{print $1}')
 MGN_DNS=$(curl -s "$ASGARD/us-east-1/autoScaling/anyInstance/$CLUSTER_NAME?field=publicDnsName")
 
-echo "##teamcity[progressMessage 'Replacing $AMI_ID mgn instance with version $VERSION , replacing 1 isntance']"
+echo "##teamcity[progressMessage 'Replacing $AMI_ID mgn instance with version $VERSION from branch $BRANCH, replacing 1 isntance']"
 
 
 
