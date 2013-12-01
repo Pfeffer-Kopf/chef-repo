@@ -9,7 +9,8 @@
 
 include_recipe 'aws'
 
-env = ENV['ENV']
+env = node['env']
+role = node['role']
 
 ENV['YOUAPPI_HOME'] = '/youappi/central/' + env
 
@@ -20,7 +21,7 @@ mysql = data_bag_item('mysql', 'deploy')
 version = `mysql -u#{mysql['user']} -p#{mysql['pass']} -h#{mysql['host']} deploy -e "SELECT version FROM releases ORDER BY release_time DESC LIMIT 1" --column-names=false | awk '{print $1}'`
 time = Time.now.strftime('%m%d%H%M%S')
 
-server = "#{(ENV['ROLE'] == 'API' ? 'tomix' : 'mgn')}-#{time}-#{version.tr("\n", '')}"
+server = "#{role == 'API' ? 'tomix' : 'mgn')}-#{time}-#{version.tr("\n", '')}"
 
 ENV['SERVER_NAME'] = server
 
@@ -41,7 +42,7 @@ end
 bash 'set_enviroment' do
   user 'root'
   code <<-EOH
-     echo "export SERVER_NAME=#{server}\nexport ROLE=#{ENV['ROLE']}\nexport YOUAPPI_HOME=#{ENV['YOUAPPI_HOME']}\nexport ENV=#{env}\n" >> /etc/environment
+     echo "export SERVER_NAME=#{server}\nexport ROLE=#{role}\nexport YOUAPPI_HOME=#{ENV['YOUAPPI_HOME']}\nexport ENV=#{env}\n" >> /etc/environment
   EOH
 end
 

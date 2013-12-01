@@ -12,7 +12,7 @@ include_recipe 'aws'
 
 aws = data_bag_item('aws', 'main')
 mysql = data_bag_item('mysql', 'deploy')
-env = ENV['ENV']
+env = node['env']
 
 bash 'register_broker_in_mysql' do
   user 'root'

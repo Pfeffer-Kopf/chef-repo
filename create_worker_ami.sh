@@ -25,7 +25,7 @@ SUCCESS=$(tail -23 deploy.log | grep 'Chef Client finished' | awk '{print $1}')
 echo "$SUCCESS"
 if [ "$SUCCESS" != "" ]
 then
-	INSTANCE_ID=$(tail -19 deploy.log | grep 'Instance' | awk '{print $3}')
+	INSTANCE_ID=$(tail -20 deploy.log | grep 'Instance' | awk '{print $3}')
 	echo
 	echo creating ${INSTANCE_ID}
 	echo creating ami : ${TEMPLATE_NAME} from instance ID : ${INSTANCE_ID}
@@ -33,7 +33,7 @@ then
 	echo
 	echo registering AMI ID ${IMAGE_ID} in mysql table deploy.worker_ami
 	
-	mysql deploy -e "INSERT INTO worker_ami (ami_id,ami_name,release_id) VALUES('$IMAGE_ID','$TEMPLATE_NAME','$VERSION')"
+	mysql deploy -e "INSERT INTO worker_ami (ami_id,ami_name,release_id,branch) VALUES('$IMAGE_ID','$TEMPLATE_NAME','$VERSION','$BRANCH')"
         
         if [ "$1" == "delete" ]
 	then 
