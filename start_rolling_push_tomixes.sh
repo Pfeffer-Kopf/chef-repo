@@ -12,7 +12,7 @@ BRANCH=$4
 
 AMI_ID=$(mysql deploy -e "SELECT ami_id FROM worker_ami WHERE branch='$BRANCH' ORDER BY registration_time DESC LIMIT 1" --column-names=false | awk '{print $1}')
 VERSION=$(mysql deploy -e "SELECT release_id FROM worker_ami WHERE branch='$BRANCH' ORDER BY registration_time DESC LIMIT 1" --column-names=false | awk '{print $1}')
-INSTANCE_COUNT=$(curl -s "$ASGARD/us-east-1/autoScaling/show/tomix_cluster.json" | jsawk 'return this.instanceCount')
+INSTANCE_COUNT=$(curl -s "$ASGARD/us-east-1/autoScaling/show/$CLUSTER_NAME.json" | jsawk 'return this.instanceCount')
 
 echo "##teamcity[progressMessage 'Pushing $AMI_ID into tomix cluster with version $VERSION from $BRANCH, replacing $INSTANCE_COUNT isntances']"
 

@@ -12,6 +12,12 @@ VERSION=$3
 BRANCH=$2
 TEMPLATE_AMI=$(mysql deploy -e "SELECT ami_id FROM template_ami ORDER BY registration_time DESC LIMIT 1" --column-names=false | awk '{print $1}')
 TEMPLATE_NAME="worker-$NOW--$VERSION"
+
+if [ "$BRANCH" != "default" ]
+then
+	TEMPLATE_NAME="$TEMPLATE_NAME-$BRANCH "
+fi
+
 PARAMS='{"release":"'$VERSION'","branch":"'$BRANCH'"}'
 
 if [ "$TEMPLATE_AMI" != "" ]

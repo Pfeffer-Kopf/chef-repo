@@ -12,6 +12,9 @@ include_recipe 'aws'
 
 aws = data_bag_item('aws', 'main')
 mysql = data_bag_item('mysql', 'deploy')
+rabbitmq = data_bag_item('rabbitmq', 'cookie')
+
+
 env = node['env']
 
 bash 'register_broker_in_mysql' do
@@ -49,3 +52,17 @@ link '/etc/rc0.d/S22unregister_broker' do
   to '/etc/init.d/unregister_broker'
 end
 
+template '/var/lib/rabbitmq/.erlang.cookie' do
+  source 'rabbit-cookie.erb'
+  owner 'rabbitmq'
+  mode '0400'
+  variables(
+	:cookie => rabbitmq[env]
+  )
+end
+
+`killall -9 beam`
+
+service "rabbitmq-server" do
+  action :restart
+end
