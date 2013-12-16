@@ -1,0 +1,11 @@
+#!/bin/bash
+
+tar czvf /opt/access.tar.gz /var/log/nginx/
+
+INSTANCE_ID=$(ec2metadata | grep 'instance-id' | awk '{print $2}')
+BUCKET="s3://logs.youappi.com/nginx/$SERVER_NAME--$INSTANCE_ID/"
+
+aws s3 cp /opt/access.tar.gz $BUCKET
+~
+~
+
