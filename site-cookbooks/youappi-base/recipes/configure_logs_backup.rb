@@ -21,7 +21,7 @@ if env == 'prod' && role == 'API'
    mode '0777'
  end
  
- link '/etc/rc0.d/S21unregister' do
+ link '/etc/rc0.d/S21pack_logs' do
    to '/etc/init.d/package_logs'
  end
 
