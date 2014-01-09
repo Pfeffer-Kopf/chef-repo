@@ -26,6 +26,9 @@ branch = `mysql -u#{mysql['user']} -p#{mysql['pass']} -h#{mysql['host']} deploy 
 time = Time.now.strftime('%m%d%H%M%S')
 
 server = "#{role == 'API' ? 'tomix' : 'mgn'}-#{time}-#{version.tr("\n", '')}"
+if env != 'prod'
+  server += ('-' + env)
+end
 
 ENV['SERVER_NAME'] = server
 
@@ -80,6 +83,11 @@ if env == 'prod' && role == 'MGN'
     ip ip_info['ip']
     action :associate
   end
+
+  service 'rabbitmq-stop' do 
+    action :stop
+  end
+
 end
 
 link '/etc/rc0.d/S22unregister' do

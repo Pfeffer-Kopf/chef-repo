@@ -19,9 +19,12 @@ if env == 'prod' && role == 'API'
    source '/package_logs.erb'
    owner 'root'
    mode '0777'
+   variables(
+     :server => ENV['SERVER_NAME']
+   )
  end
  
- link '/etc/rc0.d/S21pack_logs' do
+ link '/etc/rc0.d/S23pack_logs' do
    to '/etc/init.d/package_logs'
  end
 
@@ -38,7 +41,7 @@ if env == 'prod' && role == 'API'
    mode   '0777'
    variables( 
     	:aws_access_key_id => aws['aws_access_key_id'],
-      :aws_secret_access_key => aws['aws_secret_access_key']
+        :aws_secret_access_key => aws['aws_secret_access_key']
    )
  end
 

@@ -8,6 +8,9 @@
 #
 
 
+# configure shovel here
+
+
 include_recipe 'aws'
 
 aws = data_bag_item('aws', 'main')

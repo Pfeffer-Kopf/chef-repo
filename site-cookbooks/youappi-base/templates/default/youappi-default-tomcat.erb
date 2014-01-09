@@ -26,6 +26,12 @@ server {
         # Location checking logic
         ###
 
+	 #0 - Redirect /broker to the rabbitMQ manager
+        location /broker {
+        rewrite ^ http://$host:15672/ ;
+        }
+
+
         #1 -  If it's a php file, pass it to the php interpreter
         location ~ \.php$ {
                 # This will need to go away if php-fpm is hosted on another server as nginx
