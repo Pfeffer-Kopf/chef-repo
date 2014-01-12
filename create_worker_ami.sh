@@ -9,7 +9,10 @@ rm -f deploy.log
 
 NOW=$(date +"%d-%m--%H-%M")
 VERSION=$3
+NAME=$4
+ROLE=$5
 BRANCH=$2
+
 TEMPLATE_AMI=$(mysql deploy -e "SELECT ami_id FROM template_ami ORDER BY registration_time DESC LIMIT 1" --column-names=false | awk '{print $1}')
 TEMPLATE_NAME="worker-$NOW--$VERSION"
 
@@ -18,7 +21,7 @@ then
 	TEMPLATE_NAME="$TEMPLATE_NAME-$BRANCH "
 fi
 
-PARAMS='{"release":"'$VERSION'","branch":"'$BRANCH'"}'
+PARAMS='{"release":"'$VERSION'","branch":"'$BRANCH'","appName":"'$NAME'"}'
 
 if [ "$TEMPLATE_AMI" != "" ]
 then
@@ -39,7 +42,7 @@ then
 	echo
 	echo registering AMI ID ${IMAGE_ID} in mysql table deploy.worker_ami
 	
-	mysql deploy -e "INSERT INTO worker_ami (ami_id,ami_name,release_id,branch) VALUES('$IMAGE_ID','$TEMPLATE_NAME','$VERSION','$BRANCH')"
+	mysql deploy -e "INSERT INTO worker_ami (ami_id, ami_name, release_id, role,  branch) VALUES('$IMAGE_ID','$TEMPLATE_NAME','$VERSION','$ROLE', '$BRANCH')"
         
         if [ "$1" == "delete" ]
 	then 
