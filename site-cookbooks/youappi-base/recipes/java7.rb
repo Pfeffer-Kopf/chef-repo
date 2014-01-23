@@ -26,4 +26,5 @@ package "oracle-java7-set-default" do
   action :install
 end
 
-ENV['JAVA_HOME']='/usr/lib/jvm/java-7-oracle/jre/bin/java'
+ENV['JAVA_HOME']='/usr/lib/jvm/java-7-oracle/jre'
+
