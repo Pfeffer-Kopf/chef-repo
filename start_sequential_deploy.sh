@@ -5,13 +5,12 @@
 
 source ~/.bashrc
 
-GROUP=$1
-CLUSTER_NAME=$2
-BRANCH=$3
+CLUSTER_NAME=$1
+BRANCH=$2
 
 AMI_ID=$(mysql deploy -e "SELECT ami_id FROM worker_ami WHERE branch='$BRANCH' ORDER BY registration_time DESC LIMIT 1" --column-names=false | awk '{print $1}')
 VERSION=$(mysql deploy -e "SELECT release_id FROM worker_ami WHERE branch='$BRANCH' ORDER BY registration_time DESC LIMIT 1" --column-names=false | awk '{print $1}')
-ASG_NAME=$(curl -s $ASGARD/us-east-1/cluster/show/tomix_cluster_stg.json | jsawk 'return this.autoScalingGroupName' | grep -o "[_a-z0-9-]*")
+ASG_NAME=$(curl -s "$ASGARD/us-east-1/cluster/show/$CLUSTER_NAME.json" | jsawk 'return this.autoScalingGroupName' | grep -o "[_a-z0-9-]*")
 
 echo "##teamcity[progressMessage 'Starting creation of next ASG on CLUSTER $CLUSTER_NAME  with $AMI_ID with version $VERSION from $BRANCH']"
 
@@ -24,7 +23,7 @@ if [ -z "$AMI_ID" ] ; then
 	
 	sleep 1m
 	
-	ASG_NEW=$(curl -s $ASGARD/us-east-1/cluster/show/tomix_cluster_stg.json | jsawk 'return this.autoScalingGroupName' | grep -o "[_a-z0-9-]*" | awk 'NR==2')
+	ASG_NEW=$(curl -s "$ASGARD/us-east-1/cluster/show/$CLUSTER_NAME.json" | jsawk 'return this.autoScalingGroupName' | grep -o "[_a-z0-9-]*" | awk 'NR==2')
 
 	echo "##teamcity[progressMessage 'Created new ASG $ASG_NEW , waiting for instnaces to become healthy before stopping traffic on $ASG_NAME']"
 
