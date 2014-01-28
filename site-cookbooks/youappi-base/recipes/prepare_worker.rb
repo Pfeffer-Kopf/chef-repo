@@ -28,6 +28,14 @@ aws_s3_file "/var/lib/tomcat7/webapps/#{appName}.war" do
   aws_secret_access_key aws['aws_secret_access_key']
 end
 
+debName='banner-scripts'
+aws_s3_file "/youappi/#{debName}.deb" do
+  bucket "deploy.youappi.com"
+  remote_path "releases/#{node['branch']}/#{node['release']}/#{debName}.deb"
+  aws_access_key_id aws['aws_access_key_id']
+  aws_secret_access_key aws['aws_secret_access_key']
+end
+
 directory '/var/lib/tomcat7/webapps/ROOT' do
   action :delete
   recursive true

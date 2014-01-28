@@ -25,7 +25,7 @@ branch = `mysql -u#{mysql['user']} -p#{mysql['pass']} -h#{mysql['host']} deploy 
 
 time = Time.now.strftime('%m%d%H%M%S')
 
-server = "#{role == 'API' ? 'tomix' : 'mgn'}-#{time}-#{version.tr("\n", '')}"
+server = "#{role == 'API' ? 'tomix' : (role == 'BANNER' ? 'banner' : 'mgn')}-#{time}-#{version.tr("\n", '')}"
 if env != 'prod'
   server += ('-' + env)
 end
@@ -81,7 +81,7 @@ if role == 'MGN'
   aws_elastic_ip 'elastic_ip_mgn' do
     aws_access_key aws['aws_access_key_id']
     aws_secret_access_key aws['aws_secret_access_key']
-    ip ip_info['ip_'+prod]
+    ip ip_info["ip_#{env}"]
     action :associate
   end
 
